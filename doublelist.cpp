@@ -11,7 +11,7 @@ public:
 
 	DoubleNode<T>* prev;
 	DoubleNode<T>* next;
-	DoubleNode(T* value): value(value) {}
+    DoubleNode(T* value): value(value), prev(0), next(0) {}
 
 	T* getVal(){
 
@@ -25,15 +25,14 @@ template<class T>
 class DoubleList
 {
 
-	bool ordered;
-	T* current;
-	DoubleNode<T> *head, *tail;
+    bool ordered;
+    DoubleNode<T> *head, *tail, *current;
 
 public:
 
 	int size;
 
-    DoubleList(bool ordered = 0): ordered(ordered), size(0), head(0), tail(0){}
+    DoubleList(bool ordered = 0): ordered(ordered), size(0), head(0), tail(0), current(0){}
     ~DoubleList();
 	
     T* add(T* value) {
@@ -71,7 +70,7 @@ public:
 
 					while (0 != buffer){
 
-						if (*value < *buffer->getVal()){
+                        if (*value <= *buffer->getVal()){
 
 							break;
 
@@ -95,9 +94,7 @@ public:
 
 				tail->next = new DoubleNode<T>(value);
 				tail->next->prev = tail;
-				tail = tail->next;
-				size++;
-				return tail->getVal();
+                tail = tail->next;
 
 			}
 
@@ -141,10 +138,35 @@ public:
 
     T* next() {
 
-    	if (0 == current) current = head;
+        if (0 == current) current = head;
     	else current = current->next;
 
-    	return current;
+        return 0 == current? 0: current->getVal();
+
+    }
+
+    T* get(T* value) {
+
+        if (0 == head) {
+
+            return 0;
+
+        } else {
+
+            DoubleNode<T> *buffer = head;
+
+             while (0 != buffer) {
+
+                if (*value == *buffer->getVal())
+                    return buffer->getVal();
+
+                buffer = buffer->next;
+
+            }
+
+            return 0;
+
+        }
 
     }
 
@@ -215,15 +237,14 @@ template<class T>
 class CircularDoubleList
 {
 
-	bool ordered;
-	T* current;
-	DoubleNode<T> *head, *tail;
+    bool ordered;
+    DoubleNode<T> *head, *tail, *current;
 
 public:
 
 	int size;
 
-    CircularDoubleList(bool ordered = 0): ordered(ordered), size(0), head(0), tail(0){}
+    CircularDoubleList(bool ordered = 0): ordered(ordered), size(0), head(0), tail(0), current(0){}
     ~CircularDoubleList();
 	
     T* add(T* value) {
@@ -267,7 +288,7 @@ public:
 
 					do {
 
-						if (*value < *buffer->getVal()){
+                        if (*value <= *buffer->getVal()){
 
 							break;
 
@@ -329,22 +350,48 @@ public:
 
     T* front(){
 
-        return head;
+        return head->getVal();
 
     }
 
     T* end() {
 
-    	return tail;
+        return tail->getVal();
 
     }
 
     T* next() {
 
     	if (0 == current) current = head;
+        else if (current == tail) current = 0;
     	else current = current->next;
 
-    	return current;
+        return current == 0? 0: current->getVal();
+
+    }
+
+    T* get(T* value) {
+
+        if (0 == head) {
+
+            return 0;
+
+        } else {
+
+            DoubleNode<T> *buffer = head;
+
+            do {
+
+                if (*value == *buffer->getVal())
+                    return buffer->getVal();
+
+                buffer = buffer->next;
+
+            } while (head != buffer);
+
+            return 0;
+
+        }
 
     }
 

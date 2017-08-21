@@ -1,8 +1,13 @@
 //string cin cout
 #include <iostream>
+#include "lugar.cpp"
+#include "persona.cpp"
+#include "doublelist.cpp"
 
 //clase para el manejo de eventos
 class Evento {
+
+public:
 
 	std::string titulo;
 	std::string descripcion;
@@ -10,19 +15,61 @@ class Evento {
 	int inicio_horas;
 	int inicio_minutos;
 	int duracion_horas;
-	int duracion_minutos;
-	//clase lugar pendiente de abstraer
-	//lista de participantes pendiente de implementar
+    int duracion_minutos;
+    Lugar* lugar;
+    DoubleList<Persona>* participantes;
 
-public:
-
-	Evento(int inicio_horas, int inicio_minutos): 
+    Evento (
+            int inicio_horas,
+            int inicio_minutos,
+            std::string titulo="",
+            std::string descripcion="",
+            std::string fecha="",
+            int duracion_horas=0,
+            int duracion_minutos=0
+    ):
 		inicio_horas(inicio_horas),
-		inicio_minutos(inicio_minutos) {
+        inicio_minutos(inicio_minutos),
+        titulo(titulo),
+        descripcion(descripcion),
+        fecha(fecha),
+        duracion_horas(duracion_horas),
+        duracion_minutos(duracion_minutos),
+        lugar(0),
+        participantes(new DoubleList<Persona>(1))
+    {}
 
-			//hacer algo en el constructor aqui
+    ~Evento(){
+        //destruir aqui
+    }
 
-	}
+    void setLugar(Lugar* lugar){
+
+        this->lugar = lugar;
+
+    }
+
+    void ordenar(int tipo){
+
+        Persona* p = participantes->next();
+        DoubleList<Persona>* temp = new DoubleList<Persona>(1);
+        while (0 != p) {
+
+            p->orderBy(tipo);
+            temp->add(p);
+            p = participantes->next();
+
+        }
+
+        participantes = temp;
+
+    }
+
+    void print() {
+
+        participantes->print();
+
+    }
 
 	bool operator ==(const Evento &e) const{
 
@@ -60,7 +107,7 @@ public:
 
 	friend std::ostream& operator << (std::ostream &o,const Evento &e){
 
-    	o << e.inicio_horas << ":" << e.inicio_minutos;
+        o  << "Evento: " << e.titulo << " - " << e.inicio_horas << ":" << e.inicio_minutos  << " - " << e.descripcion;
     	return o;
 
 	}

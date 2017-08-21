@@ -10,7 +10,7 @@ class SimpleNode {
 public:
 
 	SimpleNode<T>* next;
-	SimpleNode(T* value): value(value) {}
+    SimpleNode(T* value): value(value), next(0) {}
 
 	T* getVal(){
 
@@ -24,9 +24,8 @@ template<class T>
 class SimpleList
 {
 
-	bool ordered;
-	T* current;
-	SimpleNode<T> *head, *tail;
+    bool ordered;
+    SimpleNode<T> *head, *tail, *current;
 
 public:
 
@@ -69,7 +68,7 @@ public:
 
 					while (0 != buffer->next){
 
-						if (*value < *buffer->next->getVal()){
+                        if (*value <= *buffer->next->getVal()){
 
 							break;
 
@@ -124,13 +123,13 @@ public:
 
     T* front(){
 
-        return head;
+        return head->getVal();
 
     }
 
     T* end() {
 
-    	return tail;
+        return tail->getVal();
 
     }
 
@@ -139,7 +138,32 @@ public:
     	if (0 == current) current = head;
     	else current = current->next;
 
-    	return current;
+        return current == 0? 0: current->getVal();
+
+    }
+
+    T* get(T* value) {
+
+        if (0 == head) {
+
+            return 0;
+
+        } else {
+
+            SimpleNode<T> *buffer = head;
+
+             while (0 != buffer) {
+
+                if (*value == *buffer->getVal())
+                    return buffer->getVal();
+
+                buffer = buffer->next;
+
+            }
+
+            return 0;
+
+        }
 
     }
 

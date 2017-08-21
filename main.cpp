@@ -1,28 +1,27 @@
-#include <iostream>
-#include "doublelist.cpp"
-#include "evento.cpp"
+#include "mainwindow.h"
+#include <QApplication>
+#include "maincore.cpp"
 
-int main() {
+int main(int argc, char *argv[])
+{
+    /*QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
 
-	CircularDoubleList<Evento>* lista = new CircularDoubleList<Evento>(true);
+    return a.exec();*/
 
-	lista->add(new Evento(5, 25));
-	lista->add(new Evento(5, 32));
-	lista->add(new Evento(4, 26));
-	lista->add(new Evento(5, 23));
-	lista->add(new Evento(5, 59));
-	lista->add(new Evento(5, 45));
-	lista->add(new Evento(5, 29));
-	lista->add(new Evento(6, 25));
+    MainCore* core = new MainCore();
 
-	lista->print();
-	std::cout << lista->size << std::endl;
+    core->addContacto("rt", "ricardo", "toca");
+    core->addLugar("Mi casa", "direccion de mi casa", 5.23, 6.12);
+    core->addDia(15,2,1995);
+    core->addEvento(0,0, "Naci yo", "Fui parido", 2,30);
+    core->addUbicacion(core->lugares->get(new Lugar("Mi casa")));
+    core->addParticipante(core->contactos->get(new Persona("rt", "ricardo", "toca")));
 
-	lista->remove(new Evento(6,25));
-
-	lista->print();
-	std::cout << lista->size << std::endl;
-
-	return 0;
+    core->dias->print();
+    core->lugares->print();
+    core->contactos->print();
+    core->dias->front()->eventos->print();
 
 }
